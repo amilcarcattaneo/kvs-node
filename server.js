@@ -19,7 +19,7 @@ mongoose.set("useCreateIndex", true);
 mongoose.connect(urlMongo, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: false
+  useFindAndModify: false,
 });
 
 const KeyValueService = require("./server/services/KeyValueService");
@@ -32,8 +32,6 @@ const express = require("express");
 
 app.prepare().then(() => {
   const server = express();
-
-  // server.use("/static", express.static("public"))
 
   server.use(bodyParser.urlencoded({ extended: false }));
   server.use(bodyParser.json());

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "font-awesome/css/font-awesome.min.css";
 
 import axios from "axios";
 
@@ -7,9 +6,7 @@ const ErrorMonkey = "/assets/errormonkey.svg";
 const LoadingMonkey = "/assets/loadingmonkey.svg";
 const HappyMonkey = "/assets/happymonkey.svg";
 
-import style from "./style.css";
-
-function App() {
+function Home() {
   const [newKey, setNewKey] = useState("");
   const [newValue, setNewValue] = useState("");
 
@@ -20,33 +17,12 @@ function App() {
 
   const [logo, setLogo] = useState(LoadingMonkey);
 
-  //   const socket = openSocket(`http://localhost:${configPort}`);
-
-  //   socket.on("new keyvalue result", data => {
-  //     if (data.status > 201) {
-  //       setLogo(ErrorMonkey);
-  //       setError(data.details);
-  //     } else {
-  //       setLogo(HappyMonkey);
-  //     }
-  //   });
-
-  //   socket.on("get keyvalue result", data => {
-  //     if (data.status > 200) {
-  //       setLogo(ErrorMonkey);
-  //       setError(data.details);
-  //     } else {
-  //       setLogo(HappyMonkey);
-  //       setValue(data.value);
-  //     }
-  //   });
-
-  const handleSubmitNewPair = async event => {
+  const handleSubmitNewPair = async (event) => {
     setError("");
     setLogo(LoadingMonkey);
     event.preventDefault();
 
-    const url = `${process.env.URL}/keyvalue/key`;
+    const url = `/key`;
     const keyvalue = await axios.post(url, { key: newKey, value: newValue });
 
     if (keyvalue.status > 201) {
@@ -58,24 +34,26 @@ function App() {
 
     setNewKey("");
     setNewValue("");
+    setKey("");
+    setValue("");
   };
 
-  const handleSubmitGetKeyValue = async event => {
+  const handleSubmitGetKeyValue = async (event) => {
     setError("");
     setNewKey("");
     setNewValue("");
     setLogo(LoadingMonkey);
     event.preventDefault();
 
-    const url = `${process.env.URL}/keyvalue/key/${key}`;
-    const keyvalue = await axios.get(url);
+    const url = `/key/${key}`;
+    const { status, data } = await axios.get(url, { validateStatus: false });
 
-    if (keyvalue.status > 200) {
+    if (status > 200) {
       setLogo(ErrorMonkey);
-      setError(keyvalue.details);
+      setError(data.details);
     } else {
       setLogo(HappyMonkey);
-      setValue(keyvalue.value);
+      setValue(data.value);
     }
   };
 
@@ -87,36 +65,32 @@ function App() {
   }, [key]);
 
   return (
-    <div className={style.App}>
-      <header className={style.App - header}>
-        <img
-          src={process.env.PUBLIC_URL + logo}
-          className={style.App - logo}
-          alt="logo"
-        />
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
         <div>
           {err ? <p>{err}</p> : null}
           <h4>New Key-Value Pair</h4>
           <form onSubmit={handleSubmitNewPair}>
             <label>
-              Key:
               <input
                 type="text"
                 name="key"
-                onChange={e => setNewKey(e.target.value)}
+                placeholder="key"
+                onChange={(e) => setNewKey(e.target.value)}
                 value={newKey}
               />
             </label>
             <label>
-              Value:
               <input
                 type="text"
                 name="value"
-                onChange={e => setNewValue(e.target.value)}
+                placeholder="value"
+                onChange={(e) => setNewValue(e.target.value)}
                 value={newValue}
               />
             </label>
-            <button type="submit" className={style.submitBtn}>
+            <button type="submit" className="submitBtn">
               Submit
             </button>
           </form>
@@ -125,15 +99,15 @@ function App() {
           <h4>Get Key-Value Pair</h4>
           <form onSubmit={handleSubmitGetKeyValue}>
             <label>
-              Key:
               <input
                 type="text"
                 name="key"
-                onChange={e => setKey(e.target.value)}
+                placeholder="key"
+                onChange={(e) => setKey(e.target.value)}
                 value={key}
               />
             </label>
-            <button type="submit" className={style.submitBtn}>
+            <button type="submit" className="submitBtn">
               Submit
             </button>
           </form>
@@ -150,4 +124,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
