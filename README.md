@@ -20,8 +20,6 @@
 
 ## API REST
 
-If you have Postman installed, inside the project you'll find a Postman collection with the requests.
-
 * GET 'http://localhost:8000/key/test'
     	header 'Content-Type: application/json'
 * Status Code:
